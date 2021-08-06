@@ -34,7 +34,7 @@ export class BasketComponent implements OnInit {
                         this.productsService.getProduct(item.id).subscribe((product: IProduct) => {
                             item.product = product;
                             console.log(item.product.price, this.total);
-                            this.total += item.product.price;
+                            this.total += item.product.price * item.quantity;
                         });
                     });
 

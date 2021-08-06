@@ -8,6 +8,10 @@ import { HeaderComponent } from './header/header.component';
 import { BasketComponent } from './basket/basket.component';
 import { FooterComponent } from './footer/footer.component';
 import { ProductsComponent } from './products/products.component';
+import { ShopComponent } from './shop/shop.component';
+import { ProfileComponent } from './profile/profile.component';
+import { OrdersComponent } from './orders/orders.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -15,12 +19,19 @@ import { ProductsComponent } from './products/products.component';
     HeaderComponent,
     BasketComponent,
     FooterComponent,
-    ProductsComponent
+    ProductsComponent,
+    ShopComponent,
+    ProfileComponent,
+    OrdersComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     HttpClientModule,
+    RouterModule.forRoot([
+        { path: '', component: ShopComponent },
+        { path: 'profile', component: ProfileComponent },
+        { path: 'orders', component: OrdersComponent },
+      ]),
   ],
   providers: [],
   bootstrap: [AppComponent]

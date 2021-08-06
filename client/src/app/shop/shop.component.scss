@@ -1,0 +1,15 @@
+@mixin scaffolding {
+    border: solid 2px black;
+    margin: 10px;
+    padding: 10px;
+}
+
+:host {
+    display: flex;
+    justify-content: space-between;
+}
+
+app-basket {
+    @include scaffolding;
+    width: 20rem;
+}

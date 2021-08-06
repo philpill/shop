@@ -1,2 +1,16 @@
+<p>header</p>
 
-    <p>header</p>
+<nav>
+    <ul>
+        <li><a routerLink="">home</a></li>
+        <li><a routerLink="/profile">profile</a></li>
+        <li><a routerLink="/orders">orders</a></li>
+        
+    </ul>
+</nav>
+
+<ng-container *ngIf="currentUser">
+    <span>{{ currentUser.name.firstName }}</span>
+    <span>{{ currentUser.name.lastName }}</span>
+    <button>logout</button>
+</ng-container>

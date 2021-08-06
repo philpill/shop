@@ -1,15 +1,25 @@
 import { Component, OnInit } from '@angular/core';
+import { IUser } from 'src/interfaces/IUser';
+import { UserService } from '../user.service';
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+    selector: 'app-header',
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
 
-  constructor() { }
+    currentUser: IUser|null;
 
-  ngOnInit(): void {
-  }
+    constructor(private userService: UserService) { 
+
+        this.currentUser = null;
+    }
+
+    ngOnInit(): void {
+        this.userService.$currentUser.subscribe((user: IUser|null) => { 
+            this.currentUser = user;
+        });
+    }
 
 }
