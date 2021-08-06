@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+import { CartService } from '../cart.service';
 import { ProductsService } from '../products.service';
 
 @Component({
@@ -17,7 +18,7 @@ export class ProductsComponent implements OnInit {
     public numPages: number;
     public numItems: number;
 
-    constructor(private productsService: ProductsService) {
+    constructor(private productsService: ProductsService, private cartService: CartService) {
 
         this.$products = new Observable<any>();
         this.products = [];
@@ -59,5 +60,9 @@ export class ProductsComponent implements OnInit {
         this.pageSize = isNaN(numItems) ? this.numItems : numItems;
         this.currentPage = 1;
         this.getProducts();
+    }
+
+    onAddProduct(id: number) {
+        this.cartService.addItem(id, 1);
     }
 }

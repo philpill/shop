@@ -68,6 +68,7 @@ export class CartService {
     }
 
     removeItem(productId: number, quantity: number) {
+        console.log('removeItem()');
         let cart = this.$cart.getValue();
         cart.products.forEach((i: ICartItem) => {
             if (i.id === productId) {
@@ -77,6 +78,8 @@ export class CartService {
         cart.products = cart.products.filter((i: ICartItem) => {
             return i.quantity > 0;
         });
+        console.log(cart);
+        this.$cart.next(cart);
     }
 
     // only when logging in from anonymous state

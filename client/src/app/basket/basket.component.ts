@@ -18,22 +18,23 @@ export class BasketComponent implements OnInit {
     cart: ICart;
     total: number;
 
-    constructor(private cartService: CartService, private userService: UserService, private productsService: ProductsService) { 
+    constructor(private cartService: CartService, private userService: UserService, private productsService: ProductsService) {
         this.cart = this.cartService.getEmptyCart();
         this.total = 0;
     }
 
     ngOnInit(): void {
-        this.userService.$currentUser.subscribe((user:IUser|null) => {
+        this.userService.$currentUser.subscribe((user: IUser | null) => {
             this.total = 0;
             if (user) {
                 this.cartService.$cart.subscribe((cart: ICart) => {
-                    console.log(cart);
+                    this.total = 0;
                     this.cart = cart;
                     this.cart.products.forEach((item: ICartItem) => {
                         this.productsService.getProduct(item.id).subscribe((product: IProduct) => {
                             item.product = product;
-                            this.total += product.price;
+                            console.log(item.product.price, this.total);
+                            this.total += item.product.price;
                         });
                     });
 
@@ -42,5 +43,11 @@ export class BasketComponent implements OnInit {
             }
         });
     }
+
+    onRemoveItem(productId: number, quantity: number) {
+        this.cartService.removeItem(productId, quantity);
+    }
+
+
 
 }
