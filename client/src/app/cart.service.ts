@@ -1,22 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { ICart } from 'src/interfaces/ICart';
 import { ICartItem } from 'src/interfaces/ICartItem';
-import { identifierModuleUrl } from '@angular/compiler';
 import { UserService } from './user.service';
-import { of } from 'rxjs';
-import { IUser } from 'src/interfaces/IUser';
 
 @Injectable({
     providedIn: 'root'
 })
 export class CartService {
 
-    private cart: ICart;
+    $cart: BehaviorSubject<ICart>;
 
     constructor(private http: HttpClient, private userService: UserService) {
-        this.cart = this.getEmptyCart();
+        this.$cart = new BehaviorSubject<ICart>(this.getEmptyCart());
     }
 
     getEmptyCart(): ICart {
@@ -26,75 +23,80 @@ export class CartService {
         };
     }
 
-    getCart(user: IUser): Observable<ICart> {
-        if (user) {
-            return this.http.get<ICart>(`http://localhost:8080/carts/${user.id}`);
-        } else {
-            return of(this.cart);
-        }
+    loadCart(userId: number) {
+        this.http.get<ICart>(`http://localhost:8080/carts/${userId}`).subscribe((cart: ICart) => {
+            this.$cart.next(cart);
+        });
     }
+
 
     saveCart() {
         let user = this.userService.$currentUser.getValue();
         if (user) {
-            this.http.post<ICart>(`http://localhost:8080/carts/${user.id}`, this.cart);
+            this.http.post<ICart>(`http://localhost:8080/carts/${user.id}`, this.$cart.getValue());
         } else {
             // save to cookies
         }
     }
 
     clearCart() {
-        this.cart.products = [];
         let user = this.userService.$currentUser.getValue();
         if (user) {
-            this.http.delete(`http://localhost:8080/carts/${user.id}`);
-        } else {
-            // clear cart cookie values
+            this.$cart.next({ id: user.id, products: [] });
         }
     }
 
     addItem(productId: number, quantity: number) {
+
+        let cart = this.$cart.getValue();
+
         let processed = false;
-        this.cart.products.forEach((i: ICartItem) => {
+        cart.products.forEach((i: ICartItem) => {
             if (i.id === productId) {
                 i.quantity += quantity;
                 processed = true;
             }
         });
         if (!processed) {
-            this.cart.products.push({
+            cart.products.push({
                 id: productId,
                 quantity: quantity
             });
         }
+
+        this.$cart.next(cart);
     }
 
     removeItem(productId: number, quantity: number) {
-        this.cart.products.forEach((i: ICartItem) => {
+        let cart = this.$cart.getValue();
+        cart.products.forEach((i: ICartItem) => {
             if (i.id === productId) {
                 i.quantity -= quantity;
             }
         });
-        this.cart.products = this.cart.products.filter((i: ICartItem) => {
+        cart.products = cart.products.filter((i: ICartItem) => {
             return i.quantity > 0;
         });
     }
 
     // only when logging in from anonymous state
     // if already logged in, do not merge - clear cart
-    mergeCart(cart: ICart) {
+    mergeCart(newCart: ICart) {
+        let cart = this.$cart.getValue();
         cart.products.forEach((i: ICartItem) => {
-            let item = this.cart.products.find((j: ICartItem) => {
+            let item = newCart.products.find((j: ICartItem) => {
                 return (j.id === i.id);
             });
             if (item !== undefined) {
                 i.quantity += item.quantity;
             } else {
-                this.cart.products.push({
+                cart.products.push({
                     id: i.id,
                     quantity: i.quantity
                 });
             }
         });
+
+        this.$cart.next(cart);
     }
 }

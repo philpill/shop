@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { IUser } from 'src/interfaces/IUser';
+import { CartService } from './cart.service';
 import { UserService } from './user.service';
 
 @Component({
@@ -8,7 +10,11 @@ import { UserService } from './user.service';
 })
 export class AppComponent {
 
-    constructor(private userService: UserService) {
-
+    constructor(private userService: UserService, private cartService: CartService) {
+        this.userService.$currentUser.subscribe((user:IUser|null) => {
+            if (user) {
+                this.cartService.loadCart(user.id);
+            }
+        });
     }
 }

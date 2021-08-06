@@ -16,20 +16,24 @@ import { UserService } from '../user.service';
 export class BasketComponent implements OnInit {
 
     cart: ICart;
+    total: number;
 
     constructor(private cartService: CartService, private userService: UserService, private productsService: ProductsService) { 
         this.cart = this.cartService.getEmptyCart();
+        this.total = 0;
     }
 
     ngOnInit(): void {
         this.userService.$currentUser.subscribe((user:IUser|null) => {
+            this.total = 0;
             if (user) {
-                this.cartService.getCart(user).subscribe((cart: ICart) => {
+                this.cartService.$cart.subscribe((cart: ICart) => {
                     console.log(cart);
                     this.cart = cart;
                     this.cart.products.forEach((item: ICartItem) => {
                         this.productsService.getProduct(item.id).subscribe((product: IProduct) => {
                             item.product = product;
+                            this.total += product.price;
                         });
                     });
 
