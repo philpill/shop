@@ -11,49 +11,53 @@ export class ProductsComponent implements OnInit {
 
     public $products: Observable<any>;
     public products: any[];
-    public loadedProducts: any[];
 
     private pageSize: number;
     public currentPage: number;
     public numPages: number;
+    public numItems: number;
 
     constructor(private readonly productsService: ProductsService) {
 
         this.$products = new Observable<any>();
         this.products = [];
-        this.loadedProducts = [];
         this.pageSize = 6;
         this.currentPage = 1;
         this.numPages = 1;
-
+        this.numItems = 0;
     }
 
     ngOnInit(): void {
+        this.getProducts();
+    }
 
-        this.productsService.getProducts().subscribe((data) => {
-            this.currentPage = 0;
-            this.products = data;
-            this.numPages = Math.ceil(data.length / this.pageSize);
-            this.loadProducts();
+    getProducts() {
+        this.productsService.getProductsByPage(this.currentPage, this.pageSize).subscribe((data) => {
+            this.products = data.body;
+            console.log(data);
+            console.log(this.products);
+            let totalHeader = data.headers.get('X-Total-Count') || '';
+            let total = parseInt(totalHeader, 10);
+            this.numItems =  isNaN(total) ? 0 : total;
+            this.numPages = this.numItems ? Math.ceil(this.numItems / this.pageSize) : 1;
         });
     }
 
     onNextPage() {
         this.currentPage = this.currentPage < this.numPages ? this.currentPage + 1 : this.numPages
-        this.loadProducts();
+        this.getProducts();
     }
 
     onPreviousPage() {
         this.currentPage = this.currentPage === 0 ? 0 : this.currentPage - 1;
-        this.loadProducts();
+        this.getProducts();
     }
 
-    loadProducts() {
-        this.loadedProducts = [];
-        let startIndex = this.pageSize * this.currentPage;
-        for (let i = startIndex; i < startIndex + this.pageSize; i++) {
-            console.log(this.products[i]);
-            this.loadedProducts.push(this.products[i]);
-        }
+    onItemsChange(e: Event) {
+        let el = e.target as HTMLSelectElement;
+        let numItems = parseInt(el.value, 10);
+        this.pageSize = isNaN(numItems) ? this.numItems : numItems;
+        this.currentPage = 1;
+        this.getProducts();
     }
 }

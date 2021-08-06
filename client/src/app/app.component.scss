@@ -1,3 +1,9 @@
+@mixin scaffolding {
+    border: solid 2px black;
+    margin: 10px;
+    padding: 10px;
+}
+
 .container {
     display: grid;
     grid-template-columns: auto 20rem;
@@ -6,18 +12,22 @@
 }
 
 app-header {
-    border: solid 1px #f00;
+    @include scaffolding;
     grid-column: 1/3;
     grid-row: auto;
 }
 
 .main {
-    border: solid 1px #0f0;
+    @include scaffolding;
     grid-row: auto;
 }
 
 app-footer {
-    border: solid 1px #f00;
+    @include scaffolding;
     grid-column: 1/3;
     grid-row: auto;
+}
+
+app-basket {
+    @include scaffolding;
 }
