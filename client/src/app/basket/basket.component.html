@@ -1,1 +1,9 @@
 <p>basket</p>
+
+<ul>
+    <li *ngFor="let item of cart.products">
+        <span *ngIf="item.product">
+        {{ item.product.name }}
+        </span>
+    </li>
+</ul>

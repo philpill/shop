@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { IUser } from 'src/interfaces/IUser';
 
 @Injectable({
@@ -8,17 +8,20 @@ import { IUser } from 'src/interfaces/IUser';
 })
 export class UserService {
 
-    private currentUser: IUser | null;
+    public $currentUser: BehaviorSubject<IUser|null>;
 
     constructor(private http: HttpClient) { 
-        this.currentUser = null;
+        this.$currentUser = new BehaviorSubject<IUser|null>(null);
+        this.loadFirstUser();
     }
 
-    login(username: string, password: string): Observable<any> {
-        return this.http.get<any>('http://localhost:8080/users');
+    login(username: string, password: string): Observable<IUser> {
+        return this.http.get<IUser>('http://localhost:8080/users');
     }
 
-    getCurrentUser(): IUser | null {
-        return this.currentUser;
+    loadFirstUser() {
+        this.http.get<IUser>('http://localhost:8080/users/1').subscribe((user: IUser) => {
+            this.$currentUser.next(user);
+        });
     }
 }

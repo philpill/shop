@@ -17,7 +17,7 @@ export class ProductsComponent implements OnInit {
     public numPages: number;
     public numItems: number;
 
-    constructor(private readonly productsService: ProductsService) {
+    constructor(private productsService: ProductsService) {
 
         this.$products = new Observable<any>();
         this.products = [];
