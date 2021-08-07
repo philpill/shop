@@ -1,5 +1,7 @@
 <p>products</p>
 
+<input (input)="onSearchInput($event)" />
+
 <ul>
     <li *ngFor="let product of products">
         <img src="{{ product.defaultImage }}" />

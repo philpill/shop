@@ -20,7 +20,21 @@ export class ProductsService {
         return this.http.get<IProduct[]>('http://localhost:8080/products');
     }
 
-    public getProductsByPage(page: number, numItems: number): Observable<HttpResponse<any>> {
-        return this.http.get<IProduct[]>(`http://localhost:8080/products?_page=${ page }&_limit=${ numItems }`, { observe: 'response' });
+    public getProductsByPage(page: number, numItems: number, search: string): Observable<HttpResponse<any>> {
+
+        let url = `http://localhost:8080/products?_page=${ page }&_limit=${ numItems }`;
+
+        if (search) {
+            url = `${ url }&q=${ search }`;
+        }
+
+        return this.http.get<IProduct[]>(url, { observe: 'response' });
+    }
+
+    public getProductsBySearch(numItems: number, searchTerm: string): Observable<HttpResponse<any>> {
+
+        let url = `http://localhost:8080/products?_limit=${ numItems }&q=${ searchTerm }`;
+
+        return this.http.get<IProduct[]>(url, { observe: 'response' });
     }
 }

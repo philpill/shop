@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { IProduct } from 'src/interfaces/IProduct';
 import { CartService } from '../cart.service';
 import { ProductsService } from '../products.service';
 
@@ -11,6 +12,7 @@ import { ProductsService } from '../products.service';
 export class ProductsComponent implements OnInit {
 
     public $products: Observable<any>;
+    public $search: BehaviorSubject<string>;
     public products: any[];
 
     private pageSize: number;
@@ -20,6 +22,7 @@ export class ProductsComponent implements OnInit {
 
     constructor(private productsService: ProductsService, private cartService: CartService) {
 
+        this.$search = new BehaviorSubject<string>('');
         this.$products = new Observable<any>();
         this.products = [];
         this.pageSize = 6;
@@ -30,18 +33,26 @@ export class ProductsComponent implements OnInit {
 
     ngOnInit(): void {
         this.getProducts();
+
+        this.$search.subscribe(this.getProducts.bind(this));
     }
 
-    getProducts() {
-        this.productsService.getProductsByPage(this.currentPage, this.pageSize).subscribe((data) => {
-            this.products = data.body;
-            console.log(data);
-            console.log(this.products);
+    getProducts(search = '') {
+        if (search) {
+            this.currentPage = 1;
+        }
+        this.productsService.getProductsByPage(this.currentPage, this.pageSize, search).subscribe((data) => {
             let totalHeader = data.headers.get('X-Total-Count') || '';
             let total = parseInt(totalHeader, 10);
-            this.numItems =  isNaN(total) ? 0 : total;
+            let numItems = isNaN(total) ? 0 : total;
+            this.products = data.body;
+            this.numItems = numItems;
             this.numPages = this.numItems ? Math.ceil(this.numItems / this.pageSize) : 1;
         });
+    }
+
+    loadProducts(products: IProduct[], totalCount: number) {
+
     }
 
     onNextPage() {
@@ -64,5 +75,11 @@ export class ProductsComponent implements OnInit {
 
     onAddProduct(id: number) {
         this.cartService.addItem(id, 1);
+    }
+
+    onSearchInput(e: Event) {
+        let el = e.target as HTMLInputElement;
+        console.log(el.value);
+        this.$search.next(el.value);
     }
 }
