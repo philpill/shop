@@ -3,7 +3,7 @@
 <ul>
     <li *ngFor="let product of products">
         <img src="{{ product.defaultImage }}" />
-        <span>{{ product.price }}</span> <span>{{ product.name }}</span>
+        <span>{{ product.price }}</span> <span class="name">{{ product.name }}</span>
         <button (click)="onAddProduct(product.id)">add</button>
     </li>
 

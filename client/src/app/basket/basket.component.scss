@@ -1,4 +1,16 @@
-.basketItems {
+@import '../../styles/mixins';
+
+div {
+    @include scaffolding;
     position: sticky;
-    top     : 0;
+    top     : 10px;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    list-style: none outside;
 }

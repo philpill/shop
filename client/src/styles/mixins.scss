@@ -1,0 +1,12 @@
+@mixin scaffolding {
+    border : solid 2px black;
+    margin : 10px;
+    padding: 10px;
+}
+
+@mixin truncate {
+    width        : 10rem;
+    white-space  : nowrap;
+    overflow     : hidden;
+    text-overflow: ellipsis;
+}

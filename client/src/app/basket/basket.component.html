@@ -1,21 +1,21 @@
 <p>basket</p>
 
-<div *ngIf="cart.products" class="basketItems">
+<div *ngIf="cart.products">
 
-<ul>
-    <li *ngFor="let item of cart.products">
-        <ng-container *ngIf="item.product">
-        <span>
-            {{ item.product.name }} ({{ item.quantity }})
-        </span>
-        <span>
-            {{ item.product.price }}
-        </span>
-        <button (click)="onRemoveItem(item.product.id, item.quantity)">remove</button>
-        </ng-container>
-    </li>
-</ul>
+    <ul>
+        <li *ngFor="let item of cart.products">
+            <ng-container *ngIf="item.product">
+                <span>
+                    {{ item.product.name }} ({{ item.quantity }})
+                </span>
+                <span>
+                    {{ item.product.price }}
+                </span>
+                <button (click)="onRemoveItem(item.product.id, item.quantity)">remove</button>
+            </ng-container>
+        </li>
+    </ul>
 
-<span>total {{ total | number : '1.2-2' }}</span>
+    <span>total {{ total | number : '1.2-2' }}</span>
 
 </div>
