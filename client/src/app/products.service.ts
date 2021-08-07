@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { combineLatest, Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { IProduct } from 'src/interfaces/IProduct';
 
@@ -16,8 +16,13 @@ export class ProductsService {
         return this.http.get<IProduct>(`http://localhost:8080/products/${ id }`);
     }
 
-    public getProducts(): Observable<IProduct[]> {
-        return this.http.get<IProduct[]>('http://localhost:8080/products');
+    public getProducts(ids: number[]): Observable<IProduct[]> {
+
+        let $req = ids.map((id) => {
+            return this.http.get<IProduct>(`http://localhost:8080/products/${ id }`);
+        });
+
+        return combineLatest($req);
     }
 
     public getProductsByPage(page: number, numItems: number, search: string): Observable<HttpResponse<any>> {

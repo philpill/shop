@@ -11,19 +11,15 @@ import { ProductsService } from '../products.service';
 })
 export class ProductsComponent implements OnInit {
 
-    public $products: Observable<any>;
     public $search: BehaviorSubject<string>;
     public products: any[];
-
     private pageSize: number;
     public currentPage: number;
     public numPages: number;
     public numItems: number;
 
     constructor(private productsService: ProductsService, private cartService: CartService) {
-
         this.$search = new BehaviorSubject<string>('');
-        this.$products = new Observable<any>();
         this.products = [];
         this.pageSize = 6;
         this.currentPage = 1;
@@ -33,7 +29,6 @@ export class ProductsComponent implements OnInit {
 
     ngOnInit(): void {
         this.getProducts();
-
         this.$search.subscribe(this.getProducts.bind(this));
     }
 
@@ -49,10 +44,6 @@ export class ProductsComponent implements OnInit {
             this.numItems = numItems;
             this.numPages = this.numItems ? Math.ceil(this.numItems / this.pageSize) : 1;
         });
-    }
-
-    loadProducts(products: IProduct[], totalCount: number) {
-
     }
 
     onNextPage() {

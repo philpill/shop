@@ -1,1 +1,21 @@
-<p>profile works!</p>
+<p>profile</p>
+
+<div *ngIf="currentUser">
+
+    <img alt="user avatar" src="{{ currentUser.avatar }}" />
+
+    <table>
+        <tr>
+            <td>Name</td><td>{{ currentUser.name.firstName }} {{ currentUser.name.lastName }}</td>
+        </tr>
+        <tr>
+            <td>Email</td><td>{{ currentUser.email }}</td>
+        </tr>
+        <tr>
+            <td>Phone</td><td>{{ currentUser.phone }}</td>
+        </tr>
+        <tr>
+            <td>Address</td><td><address>{{ currentUser.address.street }}, {{ currentUser.address.city }}, {{ currentUser.address.country }}, {{ currentUser.address.zip }}</address></td>
+        </tr>
+    </table>
+</div>

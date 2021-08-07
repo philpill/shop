@@ -1,1 +1,21 @@
-<p>orders works!</p>
+<p>orders</p>
+
+<table *ngIf="currentUser && currentUser.orders">
+    <thead>
+        <tr>
+            <th>order number</th>
+            <th>item name</th>
+            <th>quantity</th>
+        </tr>
+    </thead>
+    <ng-container *ngFor="let order of currentUser.orders">
+        <ng-container *ngFor="let product of order.products">
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ product.detail?.name }}</td>
+                <td>{{ product.quantity }}</td>
+            </tr>
+        </ng-container>
+    </ng-container>
+
+</table>

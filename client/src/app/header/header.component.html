@@ -5,8 +5,8 @@
 <nav>
     <ul>
         <li><a routerLink="">home</a></li>
-        <li><a routerLink="/profile">profile</a></li>
-        <li><a routerLink="/orders">orders</a></li>
+        <li *ngIf="currentUser"><a routerLink="/profile">profile</a></li>
+        <li *ngIf="currentUser"><a routerLink="/orders">orders</a></li>
         
     </ul>
 </nav>
