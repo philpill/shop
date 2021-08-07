@@ -3,3 +3,14 @@
     grid-column: 1 / 2;
     grid-row: auto;
 }
+
+ul {
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    list-style: outside none;
+    margin-right: 1em;
+}

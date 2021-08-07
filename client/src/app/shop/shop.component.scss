@@ -1,8 +1,4 @@
-@mixin scaffolding {
-    border: solid 2px black;
-    margin: 10px;
-    padding: 10px;
-}
+@import '../../mixins';
 
 :host {
     display: flex;
@@ -11,5 +7,6 @@
 
 app-basket {
     @include scaffolding;
-    width: 20rem;
+    width: 50rem;
+
 }
